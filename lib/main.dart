@@ -1,8 +1,13 @@
 import 'package:english_words/english_words.dart';
-import 'package:flutter/material.dart';
+import 'package:fish_redux/fish_redux.dart';
+import 'package:flutter/material.dart' hide Page;
 import 'package:flutter/services.dart';
+import 'package:flutter_app/first/page.dart';
+import 'package:flutter_app/second/page.dart';
 
-void main() => runApp(MyApp());
+import 'count/page.dart';
+
+void main() => runApp(createApp());
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
@@ -233,4 +238,24 @@ class ImageWidget extends StatelessWidget {
           )
     ));
   }
+}
+
+Widget createApp() {
+  ///定义路由
+  final AbstractRoutes routes = PageRoutes(
+    pages: <String, Page<Object, dynamic>>{
+      "CountPage": CountPage(),
+      "FirstPage": FirstPage(),
+      "SecondPage": SecondPage(),
+    },
+  );
+  return MaterialApp(
+    title: "FishRedux",
+    home: routes.buildPage("FirstPage", null), //默认页面
+    onGenerateRoute: (RouteSettings settings) {
+      return MaterialPageRoute<Object>(builder: (BuildContext context) {
+        return routes.buildPage(settings.name, settings.arguments);
+      });
+    },
+  );
 }
